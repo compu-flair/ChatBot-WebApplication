@@ -3,3 +3,5 @@ venv
 ChatBotProject/ChatBotProject/__pycache__/urls.cpython-312.pyc
 .env
 db.sqlite3 
+ChatBotProject/ChatBotProject/migrations
+ChatBotProject/ChatBotProject/__pycache__
