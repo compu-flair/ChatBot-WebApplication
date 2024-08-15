@@ -111,7 +111,10 @@ def api(request):
         # 3. ai_msg = chain.invoke(user_msg)
 
         ############################
-        conversation = Conversation.objects.get(user_id=user_id)
+        try:
+            conversation = Conversation.objects.get(user_id=user_id)
+        except:
+            conversation = Conversation.objects.create(user_id=user_id)
         messages = Message.objects.filter(conversation=conversation)
         chat_history = [] 
         for m in messages: ## add previous messages in the current conversation
