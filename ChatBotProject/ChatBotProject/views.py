@@ -1,3 +1,4 @@
+from .models import Conversation, Message
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -21,7 +22,7 @@ embeddings = OpenAIEmbeddings(model = 'text-embedding-3-large',openai_api_key=op
 ## move this block to a separate function and run it weekly to always have updated site info
 ############################################################################################
 from langchain_community.document_loaders.sitemap import SitemapLoader
-sitemap_loader = SitemapLoader(web_path="https://api.python.langchain.com/sitemap.xml")
+sitemap_loader = SitemapLoader(web_path="https://apps.compu-flair.com/sitemap.xml")
 documents = sitemap_loader.load()
 
 ############################################################################################
@@ -63,7 +64,7 @@ setup_and_retrieval = RunnableParallel(
 )
 
 
-from langchain_core.messages import HumanMessage
+from langchain_core.messages import HumanMessage, AIMessage
 
 
 
@@ -106,22 +107,37 @@ def api(request):
     if request.method == "POST":
         data = json.loads(request.body)
         user_msg = data["user_msg"]
+        user_id  = data["user_id"]
         ## To do:
         # 1. retrieve docs
         # 2. make chain with memory
         # 3. ai_msg = chain.invoke(user_msg)
 
         ############################
+        conversation = Conversation.objects.get(user_id=user_id)
+        messages = Message.objects.filter(conversation=conversation)
         chat_history = [] 
-        response = chain.invoke(question_func(chat_history, user_msg))
-        chat_history.append(HumanMessage(content=response))
+        for m in messages: ## add previous messages in the current conversation
+            if m.sender == "user":
+                chat_history.append(HumanMessage(content=m.text))
+            else:
+                chat_history.append(AIMessage(content=m.text))
+        
+        
+        ai_msg = chain.invoke(question_func(chat_history, user_msg))
+        Message.objects.create(
+            conversation = conversation,
+            sender = "user",
+            text = user_msg
+        )
+        Message.objects.create(
+            conversation = conversation,
+            sender = "bot",
+            text = ai_msg
+        )
         ############################
-
-
-
-
-        ai_msg = llm.invoke(user_msg) ## this is temporary
-        dic = {"api_response": ai_msg.content}
+        
+        dic = {"api_response": ai_msg}
         return JsonResponse(dic)
 
     dic = {"api_response": "I cannot process GET requests. Please send a post request!"}
