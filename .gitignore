@@ -1,1 +1,3 @@
 venv
+*.pyc
+ChatBotProject/ChatBotProject/__pycache__/urls.cpython-312.pyc
