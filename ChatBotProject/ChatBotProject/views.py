@@ -38,9 +38,6 @@ vector = FAISS.from_documents(documents, embeddings)
 from langchain_core.prompts import ChatPromptTemplate
 prompt = ChatPromptTemplate.from_template("""
 Answer the following question based only on the provided context.
-If the context did not explicitly answer the question, do the followings: 
-1. mention that you could not find exact answer,
-2. provide a summary of the context. 
 
 Context:
 {context}
@@ -88,7 +85,7 @@ question_maker_prompt = ChatPromptTemplate.from_messages(
 
 question_chain = question_maker_prompt | llm | StrOutputParser()
 
-
+## part of adding memory
 def question_func(chat_history, question):
     if len(chat_history) == 0:
         return question
