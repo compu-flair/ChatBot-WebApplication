@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-7jwj34$@w%4)u3g+epi&ohnl*5h&-kt98qy7#^jju+=sngkvv7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ["159.65.165.9"]
+ALLOWED_HOSTS = ["159.65.165.9", "localhost"]
 
 
 # Application definition
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ChatBotProject',
+    'blogs',
 ]
 
 MIDDLEWARE = [

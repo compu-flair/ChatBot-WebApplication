@@ -5,3 +5,4 @@ ChatBotProject/ChatBotProject/__pycache__/urls.cpython-312.pyc
 db.sqlite3 
 ChatBotProject/ChatBotProject/migrations
 ChatBotProject/ChatBotProject/__pycache__
+.DS_Store
